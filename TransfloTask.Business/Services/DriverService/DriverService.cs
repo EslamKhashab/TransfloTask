@@ -22,34 +22,24 @@ namespace TransfloTask.Business.Services.DriverService
         public string GetAlphabetizedName(int id)
         {
             var driver = _repository.GetDriverById(id);
-            return Sort(driver.FirstName) + " " + Sort(driver.LastName);
+            string firstName = new string(driver.FirstName.OrderBy(c => c.ToString(), StringComparer.OrdinalIgnoreCase).ToArray());
+            string lastName = new string(driver.LastName.OrderBy(c => c.ToString(), StringComparer.OrdinalIgnoreCase).ToArray());
+            return firstName + " " + lastName;
         }
-        private string Sort(string name)
-        {
-            char[] chars = name.ToCharArray();            
-            Array.Sort(chars, StringComparer.Ordinal);
-            string sortedName = new string(chars);
-            return sortedName;
-        }
+
         public void Create(Driver driver)
         {
             _repository.InsertDriver(driver);
         }
+
         public void Update(Driver driver)
         {
             _repository.UpdateDriver(driver);
-
         }
+
         public void Delete(int id)
         {
             _repository.DeleteDriver(id);
-        }
-        private string GetRandomString()
-        {
-            var chars = "abcdefghijklmnopqrstuvwxyz";
-            var random = new Random();
-            return new string(Enumerable.Repeat(chars, 8)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
